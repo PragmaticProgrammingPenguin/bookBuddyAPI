@@ -1,0 +1,24 @@
+{
+  "name": "bookbuddyapi",
+  "version": "1.0.0",
+  "description": "Api for the bookBuddyAPI project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/PragmaticProgrammingPenguin/bookBuddyAPI.git"
+  },
+  "author": "PragmaticProgrammingPenguin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PragmaticProgrammingPenguin/bookBuddyAPI/issues"
+  },
+  "homepage": "https://github.com/PragmaticProgrammingPenguin/bookBuddyAPI#readme",
+  "dependencies": {
+    "express": "^4.19.2",
+    "nodemon": "^3.1.4"
+  }
+}
