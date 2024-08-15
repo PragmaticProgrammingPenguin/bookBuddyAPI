@@ -3,6 +3,12 @@ const app = express()
 
 const PORT = 3000
 
+require("dotenv").config()
+
+const client = require("./db/client")
+
+client.connect()
+
 //convert to json objects
 app.use(express.json())
 
