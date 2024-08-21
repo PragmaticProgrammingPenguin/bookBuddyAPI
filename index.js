@@ -20,5 +20,8 @@ app.get("/", (req,res)=>{
 })
 
 app.listen(PORT, ()=>{
-    console.log(`IT LIIIIIIIIIIIIIIIIVES! (Server live on port: ${PORT})`)
+    console.log(`Server live on port: ${PORT}
+       * * * *
+        *****
+         \\o/`)
 })
