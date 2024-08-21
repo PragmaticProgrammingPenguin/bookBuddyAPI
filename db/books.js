@@ -6,14 +6,12 @@
 */
 const client = require("./client")
 
-const createBook = async({
-    title, author, description, coverimage, available
-}) => {
+const getBooks = async () => {
     try{
-        const SQL = `INSERT INTO books(title, author, description, coverimage, available) VALUES($1, $2, $3, $4, $5) RETURNING title, author, description, coverimage, available`
-        const { rows: [book], } = await client.query(SQL, [title, author, description, coverimage, available])
-        return book
-    }catch(err){
+        const SQL =`SELECT * FROM books`
+        const { rows } = await client.query(SQL)
+        console.log(rows)
+    }catch (err){
         console.log(err)
     }
 }
@@ -31,4 +29,31 @@ const getBookByTitle = async (title) => {
     }
 }
 
-module.exports = { createBook, getBookByTitle }
+const createBook = async({
+    title,
+    author,
+    description,
+    coverimage,
+    available
+}) => {
+    try{
+        const SQL = `INSERT INTO books(
+        title,
+        author,
+        description,
+        coverimage,
+        available) VALUES($1, $2, $3, $4, $5) RETURNING *`
+        const { rows: [book], } = await client.query(SQL, [
+            title,
+            author,
+            description,
+            coverimage,
+            available])
+        return book
+    }catch(err){
+        console.log(err)
+    }
+}
+
+
+module.exports = { createBook, getBookByTitle, getBooks }

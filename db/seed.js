@@ -3,7 +3,7 @@ const client = require("./client")
 
 const { createUser, getUserByEmail } = require("./users")
 //create import books from ("./books")
-const { createBook, getBookByTitle } = require("./books")
+const { createBook, getBookByTitle, getBooks } = require("./books")
 
 const users = [
     {
@@ -33,6 +33,42 @@ const books = [
         description: "Best book.",
         coverimage: 'https://upload.wikimedia.org/wikipedia/en/1/10/The_Cat_in_the_Hat.png',
         available: "true"
+    },
+    {
+        title: 'The Great Gatsby',
+        author: 'F. Scott Fitzgerald',
+        description:
+        'Set in the 1920s, "The Great Gatsby" is a novel that vividly depicts the extravagance and decadence of the Jazz Age in America. It explores the life of Jay Gatsby, a mysterious millionaire, and his unrequited love for Daisy Buchanan. Through the lens of Nick Carraway, the story delves into themes of wealth, ambition, illusion, and the elusive American Dream.',
+        coverimage:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg/440px-The_Great_Gatsby_Cover_1925_Retouched.jpg',
+        available: false,
+    },
+    {
+        title: 'To Kill a Mockingbird',
+        author: 'Harper Lee',
+        description:
+        'Harper Lee’s masterpiece, "To Kill a Mockingbird," is a poignant exploration of racial prejudice and moral growth in the American South during the 1930s. The novel follows Scout Finch, her brother Jem, and their father Atticus as they navigate the complexities of a racially divided society. Through the lens of a child’s innocence, it addresses themes of injustice, empathy, and the power of compassion.',
+        coverimage:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/To_Kill_a_Mockingbird_%28first_edition_cover%29.jpg/440px-To_Kill_a_Mockingbird_%28first_edition_cover%29.jpg',
+        available: false,
+    },
+    {
+        title: 'Pride and Prejudice',
+        author: 'Jane Austen',
+        description:
+        'Jane Austen’s "Pride and Prejudice" is a timeless tale of love, class, and societal expectations in early 19th-century England. It revolves around the headstrong Elizabeth Bennet and the enigmatic Mr. Darcy, whose initial pride and prejudice lead to misunderstandings and complications. This classic novel explores themes of manners, marriage, and the complexities of human relationships.',
+        coverimage:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/PrideAndPrejudiceTitlePage.jpg/440px-PrideAndPrejudiceTitlePage.jpg',
+        available: true,
+    },
+    {
+        title: '1984',
+        author: 'George Orwell',
+        description:
+        'George Orwell’s dystopian masterpiece, "1984," presents a chilling vision of a totalitarian society ruled by the Party and its omnipresent leader, Big Brother. The novel follows Winston Smith, a citizen of Airstrip One, as he navigates a world of surveillance, propaganda, and thought control. "1984" serves as a stark warning about the erosion of individuality, truth, and freedom in a surveillance state.',
+        coverimage:
+        'https://images.pexels.com/photos/7034646/pexels-photo-7034646.jpeg',
+        available: true,
     },
 ]
 
@@ -84,8 +120,8 @@ const createTables = async () => {
         await client.query(`CREATE TABLE books(
                 id SERIAL PRIMARY KEY,
                 title VARCHAR(255) NOT NULL,
-                author VARCHAR(127) NOT NULL,
-                description VARCHAR(1023),
+                author VARCHAR(128) NOT NULL,
+                description VARCHAR(1024),
                 coverimage VARCHAR(255) DEFAULT 'https://images.pexels.com/photos/7034646/pexels-photo-7034646.jpeg',
                 available BOOLEAN DEFAULT TRUE
             )`)
@@ -109,8 +145,7 @@ const seedDatabase = async () => {
         console.log("INSERTING BOOKS...")
         await insertBooks()
         console.log("BOOKS ADDED SUCCESSFULLY")
-        await getUserByEmail("alice@example.com")
-        await getBookByTitle("The Cat in The Hat")
+        await getBooks()
     } catch(err){
         console.log(err)
     }finally{
