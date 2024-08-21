@@ -10,7 +10,8 @@ const getBooks = async () => {
     try{
         const SQL =`SELECT * FROM books`
         const { rows } = await client.query(SQL)
-        console.log(rows)
+        if(!rows) return {message: "Something went wrong, no results"}
+        return rows
     }catch (err){
         console.log(err)
     }
