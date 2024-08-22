@@ -40,6 +40,17 @@ const getBook = async(id)=>{
     }
 }
 
+const deleteBook = async(id)=>{
+    try{
+        console.log("ran")
+        const SQL = `DELETE FROM books WHERE id=$1 RETURNING *`
+        const { rows: [result], } = await client.query(SQL, [id])
+        return result
+    }catch(err){
+        console.log(err)
+    }
+}
+
 const createBook = async({
     title,
     author,
@@ -66,5 +77,15 @@ const createBook = async({
     }
 }
 
+const updateBook = async (id,available) => {
+    try{
+        const SQL = `UPDATE books SET available=$1 WHERE id=$2 RETURNING *`
+        const { rows: [book] } = await client.query(SQL, [available, id])
+        return book
+    }catch(err){
+        console.log(err)
+    }
+}
 
-module.exports = { createBook, getBookByTitle, getBooks, getBook }
+
+module.exports = { createBook, getBookByTitle, getBooks, getBook, deleteBook, updateBook}
