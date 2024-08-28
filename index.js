@@ -1,14 +1,9 @@
 const express = require("express")
 const app = express()
-
-const PORT = 3000
-
 require("dotenv").config()
-
 const client = require("./db/client")
-
 client.connect()
-
+const PORT = 3000
 //convert to json objects
 app.use(express.json())
 
@@ -17,6 +12,13 @@ app.use("/api", require("./api"))
 
 app.get("/", (req,res)=>{
     res.send("Hello from our server")
+})
+
+app.use((error, req, res, next) => {
+    console.log("ERROR", error)
+    res.send({
+        message:"Something went wrong"
+    })
 })
 
 app.listen(PORT, ()=>{

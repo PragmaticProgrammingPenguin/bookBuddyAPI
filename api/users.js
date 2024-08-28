@@ -3,6 +3,8 @@ const express = require("express")
 const userRouter = express.Router()
 const { getUserById, getUserByEmail, getUsers, getUser, createUser } = require("../db/users")
 
+const jwt = require("jsonwebtoken")
+
 userRouter.get("/", async (req,res)=>{
     try{
         const results = await getUsers()
@@ -47,6 +49,20 @@ userRouter.post("/register", async (req, res)=>{
         }
 
         const result = await createUser(req.body)
+        if (result) {
+            //TODO(check) userRouter may be result
+            const token = jwt.sign({id:userRouter.id, email}, process.env.JWT_SECRET,{expiresIn:"1w"})
+            res.send({message:"Registration Successful!", token, user:{
+                    id:result.id,
+                    firstname:result.firstname,
+                    lastname:result.lastname,
+                    email:result.email
+                }
+            })
+        } else {
+            res.send("error registering, try later")
+            return
+        }
         res.send("Success")
     }catch(err){
         res.send(err)
@@ -55,8 +71,20 @@ userRouter.post("/register", async (req, res)=>{
 
 // POST request to {baseURL/api/login}
 userRouter.post("/login", async (req,res)=>{
+    const { email, password } = req.body
+    if (!email || !password){
+        res.send("Missing credentials, must supply email and/or password")
+    }
     try{
         const result = await getUser(req.body.email)
+        if(result){
+            // create you token here and send with user id and email
+            const token = jwt.sign({id:result.id, email}, process.env.JWT_SECRET,
+                {expiresIn:"1w"})
+                res.send({message:"Login Successful!", token})
+        } else {
+            res.send("incorrect credentials")
+        }
         res.send("User logged in")
     }catch(err){
         res.send("something went wrong")

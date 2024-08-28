@@ -4,12 +4,12 @@ const { getBooks, getBook, createBook, deleteBook, updateBook } = require("../db
 const booksRouter = express.Router()
 
 // {baseURL/api/books/}
-booksRouter.get("/", async (req,res)=>{
+booksRouter.get("/", async (req, res, next)=>{
     try{
         const results = await getBooks();
         res.send(results)
     }catch(err){
-        res.send({ err, message: "something went wrong" })
+        next(err)
     }
 })
 
