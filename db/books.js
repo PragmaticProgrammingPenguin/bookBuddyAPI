@@ -23,7 +23,6 @@ const getBookByTitle = async (title) => {
         const {
             rows:[result],
         } = await client.query(SQL, [title])
-        console.log(result)
         return result
     }catch(err){
         console.log(err)
@@ -69,8 +68,8 @@ const createBook = async({
             title,
             author,
             description,
-            coverimage,
-            available])
+            coverimage || "https://images.pexels.com/photos/7034646.jpeg",
+            available || true])
         return book
     }catch(err){
         console.log(err)
