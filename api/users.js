@@ -5,23 +5,23 @@ const { getUserById, getUserByEmail, getUsers, getUser, createUser } = require("
 
 const jwt = require("jsonwebtoken")
 
-userRouter.get("/", async (req,res)=>{
+userRouter.get("/", async (req,res,next)=>{
     try{
         const results = await getUsers()
         res.send(results)
     } catch (err) {
-        res.send({err, message:"Something went wrong"})
+        next(err)
     }
 })
 
 // {baseURL}/users/:id
-userRouter.get("/", async(req,res)=>{
+userRouter.get("/", async(req,res,next)=>{
     try{
         const { id } = req.params
         const result = await getUserById(id)
         res.send(result)
     }catch(err){
-        res.send({err, message:"Something went wrong"})
+        next(err)
     }
 })
 
@@ -31,20 +31,20 @@ userRouter.get("/me", (req,res)=>{
 })
 
 // POST request to {baseURL/api/users/register}
-userRouter.post("/register", async (req, res)=>{
+userRouter.post("/register", async (req, res, next)=>{
     const {firstname, lastname, email, password} = req.body
     if(!email){
-        res.send("Email not provided!")
+        next({name:"EmailRequiredError", message:"Email not provided"})
         return
     }
     if(!password){
-        res.send("Password not provided!")
+        next({name:"PasswordRequiredError", message:"Password not provided"})
         return
     }
     try{
         const existingUser = await getUserByEmail(email)
         if(existingUser){
-            res.send("User already registered with that email")
+            next({name:"ExistingUserError", message:"User already registered with that email"})
             return
         }
 
@@ -52,7 +52,10 @@ userRouter.post("/register", async (req, res)=>{
         if (result) {
             //TODO(check) userRouter may be result
             const token = jwt.sign({id:userRouter.id, email}, process.env.JWT_SECRET,{expiresIn:"1w"})
-            res.send({message:"Registration Successful!", token, user:{
+            res.send({
+                message:"Registration Successful!",
+                token,
+                user:{
                     id:result.id,
                     firstname:result.firstname,
                     lastname:result.lastname,
@@ -60,34 +63,42 @@ userRouter.post("/register", async (req, res)=>{
                 }
             })
         } else {
-            res.send("error registering, try later")
+            next({
+                name: "RegistrationError",
+                message: "error registering, try again later"
+            })
             return
         }
         res.send("Success")
     }catch(err){
-        res.send(err)
+        next(err)
     }
 })
 
 // POST request to {baseURL/api/login}
-userRouter.post("/login", async (req,res)=>{
+userRouter.post("/login", async (req,res,next)=>{
     const { email, password } = req.body
     if (!email || !password){
-        res.send("Missing credentials, must supply email and/or password")
+        next({
+            name: "MissingCredentialsError",
+            message: "Please supply both an email and password",
+        })
     }
     try{
-        const result = await getUser(req.body.email)
+        const result = await getUser(req.body)
         if(result){
             // create you token here and send with user id and email
             const token = jwt.sign({id:result.id, email}, process.env.JWT_SECRET,
                 {expiresIn:"1w"})
                 res.send({message:"Login Successful!", token})
         } else {
-            res.send("incorrect credentials")
+            next({
+                name: "IncorrectCredentialsError",
+                message: "Username or password is incorrect",
+            })
         }
-        res.send("User logged in")
     }catch(err){
-        res.send("something went wrong")
+        next(err)
     }
 })
 

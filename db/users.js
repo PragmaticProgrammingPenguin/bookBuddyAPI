@@ -3,8 +3,8 @@ const bcrypt = require("bcrypt")
 const SALT_COUNT = 10
 
 const createUser = async({
-    firstname,
-    lastname,
+    firstname = "Default",
+    lastname = "Default",
     email,
     password
 })=>{
