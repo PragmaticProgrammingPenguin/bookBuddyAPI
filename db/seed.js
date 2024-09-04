@@ -4,6 +4,7 @@ const client = require("./client")
 const { createUser, getUserByEmail } = require("./users")
 //create import books from ("./books")
 const { createBook, getBookByTitle, getBooks } = require("./books")
+const { createReservation, getReservation, deleteReservation } = require("./reservations")
 
 const users = [
     {
@@ -98,7 +99,7 @@ const dropTables = async () => {
         await client.query(`DROP TABLE IF EXISTS users;`)
         await client.query(`DROP TABLE IF EXISTS books;`)
     }catch(err){
-        clgerr
+        console.log(err)
     }
 }
 
@@ -110,7 +111,7 @@ const createTables = async () => {
                 lastname VARCHAR(64),
                 email VARCHAR(64) UNIQUE NOT NULL,
                 password VARCHAR(255) NOT NULL
-            )`)
+        )`)
         
             //Write another CREATE TABLE QUERY for books and run it here
             // id - primary key, title - vc255 NOT NULL, author varchar 128 NOT NULL, description  vc1024,
@@ -124,7 +125,13 @@ const createTables = async () => {
                 description VARCHAR(1024),
                 coverimage VARCHAR(255) DEFAULT 'https://images.pexels.com/photos/7034646/pexels-photo-7034646.jpeg',
                 available BOOLEAN DEFAULT TRUE
-            )`)
+        )`)
+        
+        await client.query(`CREATE TABLE reservations(
+            id SERIAL PRIMARY KEY,
+            bookid INTEGER REFERENCES books(id),
+            userid INTEGER REFERENCES users(id)
+        )`)
     } catch (err) {
         console.log(err)
     }
@@ -146,6 +153,8 @@ const seedDatabase = async () => {
         await insertBooks()
         console.log("BOOKS ADDED SUCCESSFULLY")
         await getBooks()
+        await createReservation({ userId: 1, bookId:1 })
+        console.log(await getReservation(2))
     } catch(err){
         console.log(err)
     }finally{

@@ -41,7 +41,6 @@ const getBook = async(id)=>{
 
 const deleteBook = async(id)=>{
     try{
-        console.log("ran")
         const SQL = `DELETE FROM books WHERE id=$1 RETURNING *`
         const { rows: [result], } = await client.query(SQL, [id])
         return result

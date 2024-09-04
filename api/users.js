@@ -5,6 +5,8 @@ const { getUserById, getUserByEmail, getUsers, getUser, createUser } = require("
 
 const jwt = require("jsonwebtoken")
 
+const { requireUser } = require("./utils")
+
 userRouter.get("/", async (req,res,next)=>{
     try{
         const results = await getUsers()
@@ -15,18 +17,18 @@ userRouter.get("/", async (req,res,next)=>{
 })
 
 // {baseURL}/users/:id
-userRouter.get("/", async(req,res,next)=>{
-    try{
-        const { id } = req.params
-        const result = await getUserById(id)
-        res.send(result)
-    }catch(err){
-        next(err)
-    }
-})
+// userRouter.get("/:id", async(req,res,next)=>{
+//     try{
+//         const { id } = req.params
+//         const result = await getUserById(id)
+//         res.send(result)
+//     }catch(err){
+//         next(err)
+//     }
+// })
 
 // {baseURL}/users/me
-userRouter.get("/me", (req,res)=>{
+userRouter.get("/me", requireUser, (req,res)=>{
     res.send("Here is your account info")
 })
 
@@ -71,6 +73,7 @@ userRouter.post("/register", async (req, res, next)=>{
         }
         res.send("Success")
     }catch(err){
+        console.log("register errer:", err)
         next(err)
     }
 })

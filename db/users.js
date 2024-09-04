@@ -32,7 +32,7 @@ const getUserByEmail = async (email) => {
         } = await client.query(SQL, [email])
         return result
     }catch(err){
-        console.log(err)
+        console.log("Get user error:", err)
     }
 }
 
