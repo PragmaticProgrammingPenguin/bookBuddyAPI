@@ -1,6 +1,9 @@
 const express = require("express")
 const { getBooks, getBook, createBook, deleteBook, updateBook } = require("../db/books")
 
+const { createReservations } = require("../db/reservations")
+const { requireUser } = require("./utils")
+
 const booksRouter = express.Router()
 
 // {baseURL/api/books/}
@@ -55,7 +58,8 @@ booksRouter.delete("/:id", async (req,res,next)=>{
 })
 
 // Update book
-booksRouter.patch("/:id", async (req,res,next)=>{
+booksRouter.patch("/:id",  requireUser, async (req,res,next)=>{
+    console.log(req.user)
     try{
         const id = Number(req.params.id)
         if(isNaN(id) ||  req.params.id===""){
@@ -65,13 +69,15 @@ booksRouter.patch("/:id", async (req,res,next)=>{
             })
             return
         }
-        const result = await getBook(id)
+        // const result = await getBook(id)
+        const result = await updateBook(id)
         if(!result){
             next({name:"Not Found", message:"No matching book found"})
             return
         }else{
             const updated = await updateBook(req.params.id, req.body.available)
             if(updated){
+                await createReservation({ userId: req.user.id, booksId: updated.id })
                 res.send({
                     message: "updated successfully",
                     updated,

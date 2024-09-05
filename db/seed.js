@@ -96,8 +96,9 @@ const insertBooks = async () => {
 
 const dropTables = async () => {
     try{
-        await client.query(`DROP TABLE IF EXISTS users;`)
-        await client.query(`DROP TABLE IF EXISTS books;`)
+        await client.query(`DROP TABLE IF EXISTS users CASCADE`)
+        await client.query(`DROP TABLE IF EXISTS books CASCADE`)
+        await client.query(`DROP TABLE IF EXISTS reservations;`)
     }catch(err){
         console.log(err)
     }
@@ -154,7 +155,9 @@ const seedDatabase = async () => {
         console.log("BOOKS ADDED SUCCESSFULLY")
         await getBooks()
         await createReservation({ userId: 1, bookId:1 })
-        console.log(await getReservation(2))
+        console.log(await getReservation(1))
+        await deleteReservation(1)
+        console.log("DELETING")
     } catch(err){
         console.log(err)
     }finally{

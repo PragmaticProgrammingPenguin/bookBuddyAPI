@@ -2,9 +2,7 @@
 const express = require("express")
 const apiRouter = express.Router()
 const jwt = require("jsonwebtoken")
-const { getUserById } = require("../db/users")
-
-
+const { getUserById } = require("../db")
 
 apiRouter.use( async (req,res,next)=>{
     const auth = req.header('Authorization')
@@ -35,6 +33,9 @@ apiRouter.use("/books", require("./books"))
 
 //registers routes for requests of form {baseURL/api/users}
 apiRouter.use("/users", require("./users"))
+
+//rregisters routes for requests {baseURL/api/reservations}
+apiRouter.use("/reservations", require("./reservations"))
 
 //baseurl/api
 apiRouter.get("/", (req, res)=>{

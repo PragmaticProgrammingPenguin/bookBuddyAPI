@@ -14,12 +14,16 @@ app.get("/", (req,res)=>{
     res.send("Hello from our server")
 })
 
-app.use((error, req, res, next) => {
-    console.log("ERROR", error)
-    res.send({
-        message:"Something went wrong"
-    })
-})
+// app.use((error, req, res, next) => {
+//     console.log("ERROR", error)
+//     res.send({
+//         message:"Something went wrong"
+//     })
+// })
+
+app.use((err, req, res, next) => {
+  res.status(500).send("Something broke...");
+});
 
 app.listen(PORT, ()=>{
     console.log(`Server live on port: ${PORT}
