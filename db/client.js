@@ -1,7 +1,7 @@
 const { Client } = require("pg");
 const connectionString = process.env.DATABASE_URL
 
-const client = new pg.Client({
+const client = new db.Client({
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
   user: process.env.DB_USER,
