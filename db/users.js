@@ -10,7 +10,6 @@ const createUser = async ({
 }) => {
   try {
     const hashedPassword = await bcrypt.hash(password, SALT_COUNT);
-    console.log(hashedPassword);
     const SQL = `INSERT INTO users(firstname, lastname, email, password) VALUES($1, $2, $3, $4) ON CONFLICT(email) DO NOTHING RETURNING id, firstname, lastname, email`;
     const {
       rows: [user],
@@ -41,16 +40,13 @@ const getUserByEmail = async (email) => {
 };
 
 const getUser = async ({ email, password }) => {
-  console.log(email);
   try {
     const existingUser = await getUserByEmail(email);
     if (!existingUser) return;
     const hashedPassword = existingUser.password;
     const passwordsMatch = await bcrypt.compare(password, hashedPassword);
     if (!passwordsMatch) return;
-    console.log(existingUser);
     delete existingUser.password;
-    console.log("existing user", existingUser);
     return existingUser;
   } catch (err) {
     console.log(err);

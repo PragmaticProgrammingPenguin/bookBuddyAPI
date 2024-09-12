@@ -28,7 +28,6 @@ bookRouter.get("/:id", async (req, res, next) => {
   try {
     const id = Number(req.params.id);
 
-    console.log(id);
     if (isNaN(id) || req.params.id === " ") {
       next({
         name: "InvalidIDFormat",
@@ -51,7 +50,6 @@ bookRouter.get("/:id", async (req, res, next) => {
 bookRouter.post("/", requireUser, async (req, res) => {
   try {
     const result = await createBook(req.body);
-    console.log(result);
     res.send(result);
   } catch (err) {
     console.log(err);
@@ -61,7 +59,6 @@ bookRouter.post("/", requireUser, async (req, res) => {
 bookRouter.delete("/:id", requireUser, async (req, res) => {
   try {
     const result = await deleteBook(req.params.id);
-    console.log(result);
     res.send({ message: "book deleted succesfully", id: result });
   } catch (err) {
     res.send(err);
@@ -69,7 +66,6 @@ bookRouter.delete("/:id", requireUser, async (req, res) => {
 });
 
 bookRouter.patch("/:id", requireUser, async (req, res, next) => {
-  console.log("USER", req.user);
   try {
     const id = Number(req.params.id);
     if (isNaN(id) || req.params.id === " ") {

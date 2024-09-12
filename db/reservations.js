@@ -24,7 +24,7 @@ const getReservation = async (id) => {
   }
 };
 
-const getUsersReservations = async (usserId) => {
+const getUsersReservations = async (userId) => {
     try{
         const SQL = `SELECT reservations.id, books.title, books.description, books.coverimage, books.author FROM reservations JOIN books ON reservations.bookid = books.id AND`
         const { rows } = await client.query(SQL, [userId])
@@ -41,7 +41,6 @@ const deleteReservation = async (id) => {
     const {
       rows: [result],
     } = await client.query(SQL, [id]);
-    console.log(result);
     return result;
   } catch (err) {
     throw err;

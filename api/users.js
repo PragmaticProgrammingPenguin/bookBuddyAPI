@@ -1,9 +1,7 @@
 const express = require("express");
 const userRouter = express.Router();
 const {
-  getUserById,
   getUser,
-  getUsers,
   getUserByEmail,
   createUser,
   getUsersReservations,
@@ -66,7 +64,6 @@ userRouter.post("/register", async (req, res, next) => {
       const token = jwt.sign({ id: result.id, email }, process.env.JWT_SECRET, {
         expiresIn: "1w",
       });
-      console.log(token);
       res.send({
         mesage: "Registration Successful!",
         token,

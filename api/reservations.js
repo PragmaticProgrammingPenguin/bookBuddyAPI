@@ -9,7 +9,6 @@ const {
   deleteReservation,
   updateBook,
   getBook,
-  getUser,
 } = require("../db");
 
 reservationsRouter.get("/", requireUser, async (req, res, next) => {
@@ -26,7 +25,6 @@ reservationsRouter.delete("/:id", requireUser, async (req, res, next) => {
   try {
     // first check if a reservation with that id exists
     const reservation = await getReservation(req.params.id);
-    console.log("RESERVATION", reservation);
 
     // if not, throw an error with message - reservation does not exist - STOP
     if (!reservation) {
@@ -47,7 +45,6 @@ reservationsRouter.delete("/:id", requireUser, async (req, res, next) => {
       // -- if they DO match, two things - delete the reservation (using deleteReservation function), confirm
       // ---that the deletion was successful AND THEN update the book to be available again (set available:true);
       const deletedReservation = await deleteReservation(req.params.id);
-      console.log(deleteReservation);
       const book = await getBook(deletedReservation.bookid);
       if (deletedReservation) {
         updateBook(book.id, true);
