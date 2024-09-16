@@ -4,7 +4,12 @@ require("dotenv").config();
 const client = require("./db/client");
 client.connect();
 const PORT = process.env.PORT || 3000;
+
+const cors = require("cors")
+app.use(cors())
+
 app.use(express.json());
+
 
 // we're registering the routes in /api/index.js ===> IOW, request to /api ---> send request to /api/index.js
 app.use("/api", require("./api"));
